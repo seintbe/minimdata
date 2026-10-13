@@ -1,0 +1,366 @@
+{
+  "taskId": "task-summarize-paper",
+  "summary": "总结论文并生成邮件草稿",
+  "firstReadEvents": [
+    {
+      "schemaVersion": "agentos.first-read.v1",
+      "eventId": "fr-26af0f296e3a",
+      "taskId": "task-summarize-paper",
+      "spanId": "span-t1",
+      "actor": {
+        "type": "agent",
+        "id": "agent://main"
+      },
+      "execution": {},
+      "resource": {
+        "resourceId": "file:/papers/paper-a.pdf",
+        "versionId": "inode:77:1",
+        "contentFingerprint": null,
+        "sizeBytes": null,
+        "originPath": "/papers/paper-a.pdf",
+        "resolvedPath": "/papers/paper-a.pdf",
+        "linkChain": [
+          "/papers/paper-a.pdf"
+        ]
+      },
+      "read": {
+        "requestedBytes": 40960,
+        "grantedBytes": 40960,
+        "offset": 0,
+        "truncated": false
+      },
+      "sensitivity": {
+        "level": "internal",
+        "source": "S2_policy",
+        "confidence": "CORROBORATED",
+        "matchedRule": "rule:papers-internal"
+      },
+      "decision": {
+        "verdict": "ALLOW",
+        "matchedInputId": "in_paper",
+        "reason": "declared_input_within_scope",
+        "decisionId": "frdec-908bea6cc630"
+      },
+      "coverageGaps": [],
+      "evidenceRefs": [],
+      "folded": false
+    },
+    {
+      "schemaVersion": "agentos.first-read.v1",
+      "eventId": "fr-9f2309c754b3",
+      "taskId": "task-summarize-paper",
+      "spanId": "span-t3",
+      "actor": {
+        "type": "subagent",
+        "id": "agent://reader"
+      },
+      "execution": {},
+      "resource": {
+        "resourceId": "file:/papers/paper-a.pdf",
+        "versionId": "inode:77:1",
+        "contentFingerprint": null,
+        "sizeBytes": null,
+        "originPath": "/papers/paper-a.pdf",
+        "resolvedPath": "/papers/paper-a.pdf",
+        "linkChain": [
+          "/papers/paper-a.pdf"
+        ]
+      },
+      "read": {
+        "requestedBytes": 262144,
+        "grantedBytes": 131072,
+        "offset": 0,
+        "truncated": true
+      },
+      "sensitivity": {
+        "level": "internal",
+        "source": "S2_policy",
+        "confidence": "CORROBORATED",
+        "matchedRule": "rule:papers-internal"
+      },
+      "decision": {
+        "verdict": "TRUNCATE",
+        "matchedInputId": "in_paper",
+        "reason": "scope_extension:byte_budget_exceeded",
+        "decisionId": "frdec-cc46e9f6bbd9"
+      },
+      "coverageGaps": [],
+      "evidenceRefs": [],
+      "folded": false
+    },
+    {
+      "schemaVersion": "agentos.first-read.v1",
+      "eventId": "fr-e52509de1c6a",
+      "taskId": "task-summarize-paper",
+      "spanId": "span-t4",
+      "actor": {
+        "type": "agent",
+        "id": "agent://main"
+      },
+      "execution": {},
+      "resource": {
+        "resourceId": "file:/templates/mail/welcome.md",
+        "versionId": "inode:31:1",
+        "contentFingerprint": null,
+        "sizeBytes": null,
+        "originPath": "/templates/mail/welcome.md",
+        "resolvedPath": "/templates/mail/welcome.md",
+        "linkChain": [
+          "/templates/mail/welcome.md"
+        ]
+      },
+      "read": {
+        "requestedBytes": 4096,
+        "grantedBytes": 4096,
+        "offset": 0,
+        "truncated": false
+      },
+      "sensitivity": {
+        "level": "public",
+        "source": "S2_policy",
+        "confidence": "CORROBORATED",
+        "matchedRule": "rule:templates-public"
+      },
+      "decision": {
+        "verdict": "ALLOW",
+        "matchedInputId": "in_template",
+        "reason": "declared_input_within_scope",
+        "decisionId": "frdec-75232daa36cc"
+      },
+      "coverageGaps": [],
+      "evidenceRefs": [],
+      "folded": false
+    },
+    {
+      "schemaVersion": "agentos.first-read.v1",
+      "eventId": "fr-ce946a514f4f",
+      "taskId": "task-summarize-paper",
+      "spanId": "span-t5",
+      "actor": {
+        "type": "subagent",
+        "id": "agent://curious"
+      },
+      "execution": {},
+      "resource": {
+        "resourceId": "file:/home/user/.ssh/id_rsa",
+        "versionId": "inode:99:1",
+        "contentFingerprint": null,
+        "sizeBytes": null,
+        "originPath": "/home/user/.ssh/id_rsa",
+        "resolvedPath": "/home/user/.ssh/id_rsa",
+        "linkChain": [
+          "/home/user/.ssh/id_rsa"
+        ]
+      },
+      "read": {
+        "requestedBytes": 2048,
+        "grantedBytes": 2048,
+        "offset": 0,
+        "truncated": false
+      },
+      "sensitivity": {
+        "level": "secret",
+        "source": "S4_path_prior",
+        "confidence": "INFERRED",
+        "matchedRule": "path:**/.ssh/**"
+      },
+      "decision": {
+        "verdict": "DENY",
+        "matchedInputId": null,
+        "reason": "resource_not_declared",
+        "decisionId": "frdec-11d5de869efc"
+      },
+      "coverageGaps": [],
+      "evidenceRefs": [],
+      "folded": false
+    },
+    {
+      "schemaVersion": "agentos.first-read.v1",
+      "eventId": "fr-0b43b93004e3",
+      "taskId": "task-summarize-paper",
+      "spanId": "span-t6",
+      "actor": {
+        "type": "subagent",
+        "id": "agent://curious"
+      },
+      "execution": {},
+      "resource": {
+        "resourceId": "file:/etc/passwd",
+        "versionId": "inode:12:1",
+        "contentFingerprint": null,
+        "sizeBytes": null,
+        "originPath": "/papers/current/notes.md",
+        "resolvedPath": "/etc/passwd",
+        "linkChain": [
+          "/papers/current/notes.md",
+          "/etc/passwd"
+        ]
+      },
+      "read": {
+        "requestedBytes": 4096,
+        "grantedBytes": 4096,
+        "offset": 0,
+        "truncated": false
+      },
+      "sensitivity": {
+        "level": "confidential",
+        "source": "S4_path_prior",
+        "confidence": "INFERRED",
+        "matchedRule": "path:/etc/**"
+      },
+      "decision": {
+        "verdict": "DENY",
+        "matchedInputId": null,
+        "reason": "resource_not_declared",
+        "decisionId": "frdec-505d9adbb192"
+      },
+      "coverageGaps": [],
+      "evidenceRefs": [],
+      "folded": false
+    },
+    {
+      "schemaVersion": "agentos.first-read.v1",
+      "eventId": "fr-bfd670a221a4",
+      "taskId": "task-summarize-paper",
+      "spanId": "span-t7",
+      "actor": {
+        "type": "agent",
+        "id": "agent://main"
+      },
+      "execution": {},
+      "resource": {
+        "resourceId": "file:/papers/2026/paper-b.pdf",
+        "versionId": "inode:5:1",
+        "contentFingerprint": null,
+        "sizeBytes": null,
+        "originPath": "/papers/2026/paper-b.pdf",
+        "resolvedPath": "/papers/2026/paper-b.pdf",
+        "linkChain": [
+          "/papers/2026/paper-b.pdf"
+        ]
+      },
+      "read": {
+        "requestedBytes": 8192,
+        "grantedBytes": 8192,
+        "offset": 0,
+        "truncated": false
+      },
+      "sensitivity": {
+        "level": "internal",
+        "source": "S2_policy",
+        "confidence": "CORROBORATED",
+        "matchedRule": "rule:papers-internal"
+      },
+      "decision": {
+        "verdict": "DENY",
+        "matchedInputId": null,
+        "reason": "resource_not_declared",
+        "decisionId": "frdec-bf3b46543b1e"
+      },
+      "coverageGaps": [],
+      "evidenceRefs": [],
+      "folded": false
+    },
+    {
+      "schemaVersion": "agentos.first-read.v1",
+      "eventId": "fr-4d3581d2651c",
+      "taskId": "task-summarize-paper",
+      "spanId": "span-t8",
+      "actor": {
+        "type": "tool",
+        "id": "tool://mailer"
+      },
+      "execution": {},
+      "resource": {
+        "resourceId": "file:/templates/mail/release.md",
+        "versionId": "inode:32:1",
+        "contentFingerprint": null,
+        "sizeBytes": null,
+        "originPath": "/templates/mail/release.md",
+        "resolvedPath": "/templates/mail/release.md",
+        "linkChain": [
+          "/templates/mail/release.md"
+        ]
+      },
+      "read": {
+        "requestedBytes": 4096,
+        "grantedBytes": 4096,
+        "offset": 0,
+        "truncated": false
+      },
+      "sensitivity": {
+        "level": "public",
+        "source": "S2_policy",
+        "confidence": "CORROBORATED",
+        "matchedRule": "rule:templates-public"
+      },
+      "decision": {
+        "verdict": "UNKNOWN",
+        "matchedInputId": "in_template",
+        "reason": "collector_gap",
+        "decisionId": "frdec-0df27f157c1d"
+      },
+      "coverageGaps": [
+        "frida_not_attached"
+      ],
+      "evidenceRefs": [],
+      "folded": false
+    },
+    {
+      "schemaVersion": "agentos.first-read.v1",
+      "eventId": "fr-d1956cbb6b6e",
+      "taskId": "task-summarize-paper",
+      "spanId": "span-t9",
+      "actor": {
+        "type": "agent",
+        "id": "agent://main"
+      },
+      "execution": {},
+      "resource": {
+        "resourceId": "file:/papers/paper-a.pdf",
+        "versionId": "inode:77:2",
+        "contentFingerprint": null,
+        "sizeBytes": null,
+        "originPath": "/papers/paper-a.pdf",
+        "resolvedPath": "/papers/paper-a.pdf",
+        "linkChain": [
+          "/papers/paper-a.pdf"
+        ]
+      },
+      "read": {
+        "requestedBytes": 40960,
+        "grantedBytes": 40960,
+        "offset": 0,
+        "truncated": false
+      },
+      "sensitivity": {
+        "level": "internal",
+        "source": "S2_policy",
+        "confidence": "CORROBORATED",
+        "matchedRule": "rule:papers-internal"
+      },
+      "decision": {
+        "verdict": "ALLOW",
+        "matchedInputId": "in_paper",
+        "reason": "declared_input_within_scope",
+        "decisionId": "frdec-908bea6cc630"
+      },
+      "coverageGaps": [],
+      "evidenceRefs": [],
+      "folded": false
+    }
+  ],
+  "auditReport": {
+    "taskId": "task-summarize-paper",
+    "declaredInputs": 3,
+    "inputSurface": 8,
+    "inputSurfaceRatio": 2.6666666666666665,
+    "verdicts": {
+      "ALLOW": 3,
+      "TRUNCATE": 1,
+      "DENY": 3,
+      "UNKNOWN": 1
+    },
+    "coverageGapEvents": 1
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentos.local/schema/data-scope.schema.json",
+  "title": "DataScope",
+  "description": "任务输入面声明。决定一个资源在首次读取时是否可进入任务上下文。不含目的地、用途与义务——那些属于 skill_capability。",
+  "type": "object",
+  "required": ["schemaVersion", "taskId", "declaredInputs"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "agentos.data-scope.v1"
+    },
+    "taskId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string"
+    },
+    "declaredInputs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/declaredInput" }
+    },
+    "defaults": { "$ref": "#/$defs/defaults" },
+    "sensitivityRules": {
+      "type": "array",
+      "description": "S2 级敏感度规则表。匹配在解析后路径上执行。",
+      "items": { "$ref": "#/$defs/sensitivityRule" }
+    }
+  },
+  "$defs": {
+    "resourceRef": {
+      "type": "string",
+      "description": "规范化资源标识。scheme 之一：file / environment / clipboard / database / url / resource。",
+      "pattern": "^(file|environment|clipboard|database|url|resource):.+$"
+    },
+    "declaredInput": {
+      "type": "object",
+      "required": ["inputId", "resource", "match", "necessity"],
+      "additionalProperties": false,
+      "properties": {
+        "inputId": { "type": "string", "minLength": 1 },
+        "resource": { "$ref": "#/$defs/resourceRef" },
+        "match": {
+          "enum": ["exact", "glob"],
+          "description": "exact 为解析后路径全等；glob 为大小写无关的确定性 glob。"
+        },
+        "necessity": {
+          "enum": ["required", "optional"],
+          "description": "required 缺失时任务提前失败；optional 缺失时降级能力，不终止任务。"
+        },
+        "maxBytes": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "读取上限。超出部分必须在读取层截断，而非读入后丢弃。"
+        },
+        "sensitivityCeiling": {
+          "$ref": "#/$defs/sensitivityLevel",
+          "description": "允许该输入达到的最高敏感级别。资源实际级别高于此值即拒绝。"
+        }
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "unlistedResource": {
+          "enum": ["DENY", "REVIEW"],
+          "default": "DENY",
+          "description": "未在 declaredInputs 中列出的资源的默认裁决。默认 DENY。"
+        },
+        "recursiveGlob": {
+          "type": "boolean",
+          "default": false,
+          "description": "glob 是否默认下钻目录。默认 false，递归必须显式写 **。"
+        },
+        "allowSensitiveUpgrade": {
+          "type": "boolean",
+          "default": false
+        },
+        "strictMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "敏感度 UNKNOWN 时：true 判 DENY，false 判 REVIEW。两种取值下都不会放行。"
+        }
+      }
+    },
+    "sensitivityLevel": {
+      "enum": ["public", "internal", "confidential", "secret", "UNKNOWN"],
+      "description": "UNKNOWN 不是 public。未命中任何推定来源时为 UNKNOWN。"
+    },
+    "sensitivityRule": {
+      "type": "object",
+      "required": ["ruleId", "pattern", "level"],
+      "additionalProperties": false,
+      "properties": {
+        "ruleId": { "type": "string" },
+        "pattern": {
+          "type": "string",
+          "description": "针对解析后路径的 glob。"
+        },
+        "level": { "$ref": "#/$defs/sensitivityLevel" }
+      }
+    }
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentos.local/schema/first-read-event.schema.json",
+  "title": "FirstReadEvent",
+  "description": "一个任务对一个资源版本的首次读取。首次读取是唯一需要观测的时刻：读取者、目的、资源身份与敏感标签在这一次事件上齐备。",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "eventId",
+    "taskId",
+    "actor",
+    "resource",
+    "read",
+    "sensitivity",
+    "decision"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": "agentos.first-read.v1" },
+    "eventId": { "type": "string", "minLength": 1 },
+    "taskId": { "type": "string", "minLength": 1 },
+    "spanId": {
+      "type": ["string", "null"],
+      "description": "复用 transpect.canonical_trace.v1 的 span ID，使调用树、进程树与传播记录共用同一套标识。"
+    },
+    "folded": {
+      "type": "boolean",
+      "description": "true 表示本次读取被折叠进先前的首读事件（同版本、范围未扩大），不新增信息面。"
+    },
+    "actor": {
+      "type": "object",
+      "required": ["type", "id"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["agent", "subagent", "tool", "skill"] },
+        "id": { "type": "string" }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "pid": { "type": "integer" },
+        "processInstanceId": {
+          "type": "string",
+          "description": "host:pid:startTime。PID 会复用，因此必须与进程启动时间组合。"
+        }
+      }
+    },
+    "resource": {
+      "type": "object",
+      "required": ["resourceId"],
+      "additionalProperties": false,
+      "properties": {
+        "resourceId": { "type": "string" },
+        "versionId": {
+          "type": "string",
+          "description": "版本变化意味着新内容，必须产生新的 FirstReadEvent。"
+        },
+        "contentFingerprint": { "type": ["string", "null"] },
+        "sizeBytes": { "type": ["integer", "null"], "minimum": 0 },
+        "originPath": { "type": "string" },
+        "resolvedPath": {
+          "type": "string",
+          "description": "符号链接解析后的路径。策略匹配在此路径上执行。"
+        },
+        "linkChain": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "read": {
+      "type": "object",
+      "required": ["requestedBytes", "grantedBytes"],
+      "additionalProperties": false,
+      "properties": {
+        "requestedBytes": { "type": "integer", "minimum": 0 },
+        "grantedBytes": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "TRUNCATE 裁决下小于 requestedBytes。截断在读取层完成。"
+        },
+        "offset": { "type": "integer", "minimum": 0 },
+        "truncated": { "type": "boolean" }
+      }
+    },
+    "sensitivity": {
+      "type": "object",
+      "required": ["level", "confidence"],
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "enum": ["public", "internal", "confidential", "secret", "UNKNOWN"]
+        },
+        "source": {
+          "enum": ["S1_explicit", "S2_policy", "S3_content", "S4_path_prior", "none"],
+          "description": "推定来源分级。S3/S4 只能提升敏感度，不能降低。"
+        },
+        "confidence": {
+          "enum": ["UNKNOWN", "INFERRED", "CORROBORATED", "CONFIRMED"],
+          "description": "沿用 Transpect 四段置信度阶梯。"
+        },
+        "matchedRule": { "type": ["string", "null"] }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "required": ["verdict", "reason", "decisionId"],
+      "additionalProperties": false,
+      "properties": {
+        "verdict": {
+          "enum": ["ALLOW", "DENY", "TRUNCATE", "REVIEW", "UNKNOWN"],
+          "description": "仅 ALLOW 与 TRUNCATE 表示内容被允许进入任务上下文。"
+        },
+        "matchedInputId": { "type": ["string", "null"] },
+        "reason": { "type": "string" },
+        "decisionId": { "type": "string" }
+      }
+    },
+    "coverageGaps": {
+      "type": "array",
+      "description": "非空即降级为 UNKNOWN。采集缺失不判为安全。",
+      "items": { "type": "string" }
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

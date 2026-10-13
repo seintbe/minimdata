@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "agentos.data-scope.v1",
+  "taskId": "task-summarize-paper",
+  "summary": "总结论文并生成邮件草稿",
+  "declaredInputs": [
+    {
+      "inputId": "in_paper",
+      "resource": "file:/papers/paper-a.pdf",
+      "match": "exact",
+      "necessity": "required",
+      "maxBytes": 131072,
+      "sensitivityCeiling": "internal"
+    },
+    {
+      "inputId": "in_papers_dir",
+      "resource": "file:/papers/*",
+      "match": "glob",
+      "necessity": "optional",
+      "maxBytes": 65536,
+      "sensitivityCeiling": "internal"
+    },
+    {
+      "inputId": "in_template",
+      "resource": "file:/templates/mail/*.md",
+      "match": "glob",
+      "necessity": "optional",
+      "maxBytes": 8192,
+      "sensitivityCeiling": "public"
+    }
+  ],
+  "defaults": {
+    "unlistedResource": "DENY",
+    "recursiveGlob": false,
+    "allowSensitiveUpgrade": false,
+    "strictMode": false
+  },
+  "sensitivityRules": [
+    {
+      "ruleId": "rule:papers-internal",
+      "pattern": "/papers/**",
+      "level": "internal"
+    },
+    {
+      "ruleId": "rule:templates-public",
+      "pattern": "/templates/**",
+      "level": "public"
+    }
+  ]
+}
